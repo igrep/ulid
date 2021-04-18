@@ -26,6 +26,7 @@ Instead, herein is proposed ULID:
 * No special characters (URL safe)
 -}
 
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 module Data.ULID (
     ULID(..),
@@ -95,7 +96,9 @@ instance R.Random ULID where
         t <- getULIDTimeStamp
         let (r, g') = mkULIDRandom g
         return (ULID t r, g')
+#if !MIN_VERSION_random(1,2,0)
     randomIO = getULID
+#endif
 
 instance Hashable ULID where
     hashWithSalt salt ulid = hashWithSalt salt (encode ulid)
